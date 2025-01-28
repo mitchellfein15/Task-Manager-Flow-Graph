@@ -1,15 +1,16 @@
 const svg = d3.select("svg")
-    .attr("width", 960)
-    .attr("height", 500);
+    .attr("width", window.innerWidth)
+    .attr("height", window.innerHeight);
 
 let nodes = [];
 let links = [];
 
 const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id))
-    .force("charge", d3.forceManyBody().strength(-1000))  // Adjust the strength to increase spacing
-    .force("center", d3.forceCenter(480, 250))  // Adjust to match the SVG dimensions
-    .force("centerNode", centerNodeForce(1, 0.0001));  // Force to pull the first node to the center
+.force("link", d3.forceLink(links).id(d => d.id))
+.force("charge", d3.forceManyBody().strength(-1000))
+.force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
+.force("centerNode", centerNodeForce(1, 0.0001));
+
 
 let link = svg.append("g")
     .attr("class", "links")
@@ -50,9 +51,8 @@ simulation.on("tick", () => {
         .attr("y2", d => d.target.y);
 
     node.attr("transform", d => {
-        // Keep nodes within the boundaries
-        d.x = Math.max(d.size, Math.min(960 - d.size, d.x));
-        d.y = Math.max(d.size, Math.min(500 - d.size, d.y));
+        d.x = Math.max(0, Math.min(window.innerWidth, d.x));
+        d.y = Math.max(0, Math.min(window.innerHeight, d.y));
         return `translate(${d.x},${d.y})`;
     });
 });
