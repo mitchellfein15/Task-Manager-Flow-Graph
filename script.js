@@ -2,22 +2,14 @@ const svg = d3.select("svg")
     .attr("width", 960)
     .attr("height", 500);
 
-let nodes = [
-    { id: 1, size: 20, color: "black", text: "Example Task"},
-    { id: 2, size: 30, color: "blue", text: "Example Main Goal" },
-    { id: 3, size: 20, color: "black", text: "Example Task" }
-];
-
-let links = [
-    { source: 1, target: 2 },
-    { source: 2, target: 3 }
-];
+let nodes = [];
+let links = [];
 
 const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id))
     .force("charge", d3.forceManyBody().strength(-1000))  // Adjust the strength to increase spacing
     .force("center", d3.forceCenter(480, 250))  // Adjust to match the SVG dimensions
-    .force("centerNode", centerNodeForce(2, 0.0001));  // Force to pull node with id: 2 to the center
+    .force("centerNode", centerNodeForce(1, 0.0001));  // Force to pull the first node to the center
 
 let link = svg.append("g")
     .attr("class", "links")
@@ -84,11 +76,20 @@ function drag(simulation) {
 }
 
 function addNode() {
-    const text = prompt("Enter text for the new task:", "New Task");  
+    const text = prompt("Enter text for the main task:", "Main Task");  
     if (text !== null && text !== "") {
-        const newNode = { id: nodes.length + 1, size: 30, color: "red", text: text };
+        const newNode = { id: nodes.length + 1, size: 30, color: "blue", text: text };
         nodes.push(newNode);
-        links.push({ source: newNode.id, target: 2 });  // Only connect to the node with id: 2
+        update();
+    }
+}
+
+function addImportantTask(){
+    const text = prompt("Enter text for the important task:", "Important Task");
+    if (text !== null && text !== "") {
+        const newNode = { id: nodes.length + 1, size: 25, color: "red", text: text };
+        nodes.push(newNode);
+        links.push({ source: 1, target: newNode.id });
         update();
     }
 }
@@ -102,8 +103,6 @@ function addConnectedNode(event, d) {
         update();
     }
 }
-
-
 
 function update() {
     link = link.data(links);
@@ -159,5 +158,7 @@ function changeBackgroundColor(color) {
     d3.select("svg").style("background-color", color);
 }
 
+// Call the function to prompt for the first task
+addNode();
 changeBackgroundColor("lightgrey");
 update();
