@@ -1,0 +1,5 @@
+What I want to add in the future:
+    - links are being pulled to the middle.
+    - make better starting page
+    - make saving and loading saves possible
+    - update visuals

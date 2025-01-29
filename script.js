@@ -9,7 +9,6 @@ const simulation = d3.forceSimulation(nodes)
 .force("link", d3.forceLink(links).id(d => d.id))
 .force("charge", d3.forceManyBody().strength(-1000))
 .force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
-.force("centerNode", centerNodeForce(1, 0.0001));
 
 
 let link = svg.append("g")
@@ -87,9 +86,8 @@ function addNode() {
 function addImportantTask(){
     const text = prompt("Enter text for the important task:", "Important Task");
     if (text !== null && text !== "") {
-        const newNode = { id: nodes.length + 1, size: 25, color: "red", text: text };
+        const newNode = { id: nodes.length + 1, size: 30, color: "red", text: text };
         nodes.push(newNode);
-        links.push({ source: 1, target: newNode.id });
         update();
     }
 }
