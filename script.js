@@ -199,7 +199,8 @@ function saveGraph() {
     const dataStr = JSON.stringify(graphData);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 
-    const exportFileDefaultName = 'graphData.json';
+    const name = prompt("Enter the file name:", "save");
+    const exportFileDefaultName = name + '.json';
 
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
