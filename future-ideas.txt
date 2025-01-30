@@ -1,5 +1,7 @@
 What I want to add in the future:
     - links are being pulled to the middle.
-    - make better starting page
+    - make better starting page (menu)
     - make saving and loading saves possible
     - update visuals
+    - make more options and better popup when clicking on a node
+    - make it so user doesn't have to keep downloading new files for every save

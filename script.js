@@ -6,10 +6,12 @@ let nodes = [];
 let links = [];
 
 const simulation = d3.forceSimulation(nodes)
-.force("link", d3.forceLink(links).id(d => d.id))
-.force("charge", d3.forceManyBody().strength(-1000))
-.force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
-
+    .force("link", d3.forceLink(links)
+        .id(d => d.id)
+        .distance(75)
+    )
+    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
 
 let link = svg.append("g")
     .attr("class", "links")
@@ -74,57 +76,94 @@ function drag(simulation) {
         });
 }
 
-function addNode() {
-    const text = prompt("Enter text for the main task:", "Main Task");  
-    if (text !== null && text !== "") {
-        const newNode = { id: nodes.length + 1, size: 30, color: "blue", text: text };
-        nodes.push(newNode);
-        update();
-    }
+function generateUniqueId() {
+    return 'node-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
 }
+
 
 function addImportantTask(){
     const text = prompt("Enter text for the important task:", "Important Task");
     if (text !== null && text !== "") {
-        const newNode = { id: nodes.length + 1, size: 30, color: "red", text: text };
+        const newNode = { 
+            id: generateUniqueId(),  // Use the updated unique ID generator
+            size: 30, 
+            color: "red", 
+            text: text,
+            x: window.innerWidth / 2, 
+            y: window.innerHeight / 2 
+        };
         nodes.push(newNode);
+
+        // Update the simulation and visualization
+        simulation.nodes(nodes);
+        simulation.alpha(1).restart();
         update();
     }
 }
+
 
 function addConnectedNode(event, d) {
     const text = prompt("Enter text for the new task:", "New Task");
     if (text !== null && text !== "") {
-        const newNode = { id: nodes.length + 1, size: 20, color: "black", text: text };
+        const newNode = { 
+            id: generateUniqueId(),  // Use the updated unique ID generator
+            size: 20, 
+            color: "black", 
+            text: text,
+            x: d.x + 50,  // Position near the parent node
+            y: d.y + 50
+        };
         nodes.push(newNode);
         links.push({ source: d.id, target: newNode.id });
+
+        // Update the simulation and visualization
+        simulation.nodes(nodes);
+        simulation.force("link").links(links);
+        simulation.alpha(1).restart();
         update();
     }
 }
 
-function update() {
-    link = link.data(links);
-    link.exit().remove();
-    link = link.enter().append("line").attr("class", "link").attr("stroke", "grey").merge(link);
 
-    node = node.data(nodes);
+function update() {
+    // UPDATE LINKS
+    link = link.data(links, d => `${d.source}-${d.target}`);
+
+    // EXIT old links
+    link.exit().remove();
+
+    // ENTER new links
+    link = link.enter()
+        .append("line")
+        .attr("class", "link")
+        .attr("stroke", "grey")
+        .merge(link);
+
+    // UPDATE NODES
+    node = node.data(nodes, d => d.id);
+
+    // EXIT old nodes
     node.exit().remove();
-    const nodeEnter = node.enter().append("g").call(drag(simulation));
+
+    // ENTER new nodes
+    const nodeEnter = node.enter()
+        .append("g")
+        .call(drag(simulation));
+
     nodeEnter.append("circle")
         .attr("class", "node")
         .attr("r", d => d.size)
-        .attr("fill", d => d.color)  // Set node color
+        .attr("fill", d => d.color)
         .on("click", addConnectedNode)
-        .on("mouseover", handleMouseOver)  // Add hover event to show text
-        .on("mouseout", handleMouseOut);   // Add hover event to hide text
-    
-    // Add text elements to be shown on hover
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut);
+
     nodeEnter.append("text")
         .attr("class", "hover-text")
         .attr("dx", 15)
         .attr("dy", -15)
         .text(d => d.text)
-        .attr("visibility", "hidden");  // Hide text initially
+        .attr("visibility", "hidden");
 
     node = nodeEnter.merge(node);
 
@@ -151,6 +190,79 @@ function centerNodeForce(targetId, strength) {
         });
     };
 }
+
+function saveGraph() {
+    const graphData = {
+        nodes: nodes,
+        links: links
+    };
+    const dataStr = JSON.stringify(graphData);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = 'graphData.json';
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    document.body.appendChild(linkElement);
+    linkElement.click();
+    document.body.removeChild(linkElement);
+}
+
+
+function loadGraph(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const graphData = JSON.parse(e.target.result);
+
+            // Clear existing nodes and links
+            nodes.splice(0, nodes.length);
+            links.splice(0, links.length);
+
+            // Recreate nodes using original IDs and properties
+            graphData.nodes.forEach((node) => {
+                const newNode = {
+                    id: node.id,  // Preserve the original ID
+                    size: node.size,
+                    color: node.color,
+                    text: node.text,
+                    x: node.x,
+                    y: node.y,
+                    vx: node.vx || 0,
+                    vy: node.vy || 0
+                };
+                nodes.push(newNode);
+            });
+
+            // Recreate links using node IDs
+            graphData.links.forEach(link => {
+                const newLink = {
+                    source: link.source.id ? link.source.id : link.source,
+                    target: link.target.id ? link.target.id : link.target
+                };
+                links.push(newLink);
+            });
+
+            // Update the simulation
+            simulation.nodes(nodes);
+            simulation.force("link")
+                .links(links)
+                .id(d => d.id);  // Ensure the simulation uses node IDs
+
+            simulation.alpha(1).restart();
+
+            // Update the visualization
+            update();
+        };
+        reader.readAsText(file);
+    }
+}
+
+
+
+
 
 function changeBackgroundColor(color) {
     d3.select("svg").style("background-color", color);
