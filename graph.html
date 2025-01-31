@@ -9,7 +9,8 @@
     <body>
         <button onclick="addImportantTask()" class="button">Add Important Task</button>
         <button onclick="saveGraph()" class="button">Save Graph</button>
-        <input type="file" accept=".json" onchange="loadGraph(event)" class="button" />
+        <input type="file" accept=".json" onchange="loadGraph(event)" id="file-input" />
+        <label for="file-input" class="button">Load Graph</label>
         <svg ></svg>
         <script src="script.js"></script>
     </body>
