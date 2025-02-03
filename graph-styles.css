@@ -30,7 +30,7 @@ svg {
 }
 
 /* From Uiverse.io by adamgiebl */ 
-.button {
+.button, .label{
     font-size: 18px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -74,5 +74,9 @@ svg {
   
   button:active {
     transform: scale(0.9);
+  }
+
+  #color-picker{
+    display: none;
   }
   

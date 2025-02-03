@@ -11,7 +11,6 @@ const simulation = d3.forceSimulation(nodes)
         .distance(75)
     )
     .force("charge", d3.forceManyBody().strength(-1000))
-    .force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
 
 let link = svg.append("g")
     .attr("class", "links")
@@ -263,9 +262,8 @@ function loadGraph(event) {
 
 
 
-
-
-function changeBackgroundColor(color) {
+function changeBackgroundColor(colorPicker) {
+    let color = colorPicker.value;
     d3.select("svg").style("background-color", color);
 }
 
