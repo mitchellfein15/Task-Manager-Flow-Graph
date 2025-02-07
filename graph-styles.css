@@ -46,9 +46,10 @@ svg {
     text-decoration: none;
     transition: 0.3s ease all;
     z-index: 1;
+    background-color: rgb(231, 231, 231);
   }
   
-  button:before {
+  .button:before, label:before {
     transition: 0.5s all ease;
     position: absolute;
     top: 0;
@@ -61,22 +62,34 @@ svg {
     z-index: -1;
   }
   
-  button:hover, button:focus {
+  .button:hover, .button:focus, label:hover, label:focus {
     color: white;
   }
   
-  button:hover:before, button:focus:before {
+  .button:hover:before, .button:focus:before, label:hover:before, label:focus:before {
     transition: 0.5s all ease;
     left: 0;
     right: 0;
     opacity: 1;
   }
   
-  button:active {
+  .button:active, label:active {
     transform: scale(0.9);
   }
 
   #color-picker{
     display: none;
+  }
+
+  .settingsIcon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: 25px;
+    top: 15px;
+  }
+  
+  .settingsIcon:hover {
+    opacity: 0.8;
   }
   

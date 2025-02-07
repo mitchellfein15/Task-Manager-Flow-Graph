@@ -1,11 +1,11 @@
 What I want to add in the future:
 
     Smaller picture:
-        - need to fix it so that the labels have the same animation as the buttons
-        - need to make physics better. The nodes that aren't attached are pushing each other way too much
+        - make a settings button and move change background color there
 
     Bigger picture:
         - make more options and better popup when clicking on a node
         - make it so user doesn't have to keep downloading new files for every save
         - make better starting page (menu)(maybe)
         - update visuals
+        - make it so you can dettach and reattach nodes to each other

@@ -10,7 +10,11 @@ const simulation = d3.forceSimulation(nodes)
         .id(d => d.id)
         .distance(75)
     )
-    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("charge", d3.forceManyBody().strength(-100))
+    .force("collision", d3.forceCollide()
+    .radius(d => d.size + 5)
+);
+
 
 let link = svg.append("g")
     .attr("class", "links")
@@ -258,6 +262,10 @@ function loadGraph(event) {
         };
         reader.readAsText(file);
     }
+}
+
+function settingsMenu(){
+    
 }
 
 
