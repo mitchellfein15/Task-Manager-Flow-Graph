@@ -12,10 +12,10 @@
         <input type="file" accept=".json" onchange="loadGraph(event)" id="file-input" />
         <label for="file-input" class="button">Load Graph</label>
         <input type="color" id="color-picker" value="#000000" onchange="changeBackgroundColor(this)"/>
-        <!-- <label for="color-picker" class="button">Change Background Color</label> -->
         <img src="icons8-settings-24.png" alt="Settings" class="settingsIcon"
             onclick="settingsMenu()" style="cursor: pointer;" tabindex="0" role="button">
         <svg ></svg>
+        
         <div id="settingsPopup" class="popup">
             <div class="popup-content">
                 <span class="close" onclick="closeSettingsMenu()">&times;</span>
