@@ -264,11 +264,13 @@ function loadGraph(event) {
     }
 }
 
-function settingsMenu(){
-    
+function settingsMenu() {
+    document.getElementById("settingsPopup").style.display = "block";
 }
 
-
+function closeSettingsMenu() {
+    document.getElementById("settingsPopup").style.display = "none";
+}
 
 function changeBackgroundColor(colorPicker) {
     let color = colorPicker.value;

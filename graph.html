@@ -16,6 +16,15 @@
         <img src="icons8-settings-24.png" alt="Settings" class="settingsIcon"
             onclick="settingsMenu()" style="cursor: pointer;" tabindex="0" role="button">
         <svg ></svg>
+        <div id="settingsPopup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closeSettingsMenu()">&times;</span>
+                <h2>Settings</h2>
+                <label for="backgroundColor">Background Color:</label>
+                <input type="color" id="backgroundColor" onchange="changeBackgroundColor(this)">
+                <!-- Add more settings -->
+            </div>
+        </div>        
         <script src="script.js"></script>
     </body>
 </html>
